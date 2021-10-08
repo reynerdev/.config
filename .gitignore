@@ -1,0 +1,11 @@
+*
+!.gitignore
+!.tmux.conf
+!.zshrc
+!.config
+!.config/lvim
+!.config/lvim/config.lua
+!.config/kitty
+!.config/kitty/kitty.conf
+!.config/lvim
+!.config/lvim/config.lua
