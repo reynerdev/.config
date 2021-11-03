@@ -1,30 +1,25 @@
 --[[
 lvim is the global options object
 
-Linters should be
-filled in as strings with either
+Linters should be filled in as strings with either
 a global executable or a path to
 an executable
-]]
--- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
+]] -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 
 -- general
 lvim.log.level = "warn"
-lvim.format_on_save = true
--- lvim.colorscheme = "rose-pine"
--- lvim.colorscheme = "onedarker"
+lvim.format_on_save = true -- lvim.colorscheme = "rose-pine" lvim.colorscheme = "onedarker"
 -- vim.cmd('syntax off')
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
--- add your own keymapping
-lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
+-- add your own keymapping lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 vim.cmd('vnoremap <leader>y "+y ')
 vim.cmd('nnoremap <leader>Y gg"+yG ')
 vim.cmd('nnoremap <C-y> " ')
 vim.cmd('nnoremap <leader>d "_d')
-vim.cmd('vnoremap <leader>d "_d')
 lvim.keys.normal_mode["<esc><esc>"] = "<cmd>nohlsearch<cr>"
 lvim.keys.normal_mode["Y"] = "y$"
+vim.cmd('vnoremap <leader>d "_d')
 lvim.keys.visual_mode["p"] = [["_dP]]
 lvim.keys.visual_mode["<"] = "<gv"
 lvim.keys.visual_mode[">"] = ">gv"
@@ -38,13 +33,9 @@ vim.opt.foldenable = false -- don't fold by default
 vim.opt.foldlevel = 1
 -- to copy to clipboard
 vim.api.nvim_set_keymap("n", "y", '"+y', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "Y", '"+yy', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "P", '"+P', { noremap = true, silent = true })
--- unmap a default keymapping lvim.keys.normal_mode["<C-Up>"] = ""
+vim.api.nvim_set_keymap("n", "Y", '"+yy', { noremap = true, silent = true }) vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true, silent = true }) vim.api.nvim_set_keymap("n", "P", '"+P', { noremap = true, silent = true }) -- unmap a default keymapping lvim.keys.normal_mode["<C-Up>"] = ""
 -- edit a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
-
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- lvim.builtin.telescope.on_config_done = function()
 --   local actions = require "telescope.actions"
@@ -70,6 +61,8 @@ vim.api.nvim_set_keymap("n", "P", '"+P', { noremap = true, silent = true })
 --   w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnostics" },
 -- }
 
+
+
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.dashboard.active = true
@@ -81,7 +74,7 @@ lvim.builtin.nvimtree.show_icons.git = 0
 lvim.builtin.treesitter.ensure_installed = "maintained"
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
-
+lvim.builtin.treesitter.context_commentstring.enable = true
 -- generic LSP settings
 -- you can set a custom on_attach function that will be used for all the language servers
 -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
@@ -147,14 +140,6 @@ lvim.plugins = {
     vim.g.indent_blankline_show_first_indent_level = false
   end
     },
-{
-  "windwp/nvim-ts-autotag",
-  event = "InsertEnter",
-  config = function()
-    require("nvim-ts-autotag").setup()
-  end,
-} 
-,
   {
     'rose-pine/neovim',
     config = function ()
@@ -190,5 +175,37 @@ lvim.plugins = {
           })
   end,
 }, 
+{
+  "JoosepAlviste/nvim-ts-context-commentstring",
+  event = "BufRead",
+  config = function()
+    require('nvim-treesitter.configs').setup( {
+      context_commentstring = {
+        enable = true,
+        config = {
+          javascriptreact = {
+            __default = '// %s',
+            jsx_element = '{/* %s */}',
+            jsx_fragment = '{/* %s */}',
+            jsx_attribute = '// %s',
+            comment = '// %s'
+          }
+        }
+      }
+    })
+    end,
+},
+{
+  "windwp/nvim-ts-autotag",
+  event = "InsertEnter",
+  config = function()
+    require("nvim-ts-autotag").setup()
+  end,
+},
+}
 
-  }
+local ft = require('Comment.ft')
+
+ft.set('javascriptreact', {'{/* %s */}','{/* %s */}'})
+
+
