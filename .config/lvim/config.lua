@@ -1,13 +1,9 @@
 --[[
 lvim is the global options object
-
 Linters should be
 filled in as strings with either
 a global executable or a path to
-an executable
-]]
--- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
-
+an executable ]] -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
@@ -57,7 +53,9 @@ lvim.format_on_save = true
 lvim.builtin.dashboard.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.nvimtree.show_icons.git = 0
+-- lvim.builtin.nvimtree.show_icons.git = 0
+lvim.lsp.diagnostics.virtual_text = false
+
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -76,6 +74,7 @@ lvim.builtin.treesitter.ensure_installed = {
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.autotag.enabled = true
 
 -- generic LSP settings
 
@@ -115,18 +114,17 @@ lvim.builtin.treesitter.highlight.enabled = true
 --   end
 -- end
 
--- -- set a formatter, this will override the language server formatting capabilities (if it exists)
+-- set a formatter, this will override the language server formatting capabilities (if it exists)
 -- local formatters = require "lvim.lsp.null-ls.formatters"
 -- formatters.setup {
---   { exe = "black" },
 --   {
 --     exe = "prettier",
 --     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
---     filetypes = { "typescript", "typescriptreact" },
+--     filetypes = { "javascript", "javascriptreact","javascript.jsx" },
 --   },
 -- }
 
--- -- set additional linters
+-- -- -- set additional linters
 -- local linters = require "lvim.lsp.null-ls.linters"
 -- linters.setup {
 --   { exe = "black" },
@@ -171,6 +169,17 @@ vim.cmd('vnoremap <leader>y "+y ')
 vim.cmd('nnoremap <leader>Y gg"+yG ')
 vim.cmd('nnoremap <C-y> " ')
 vim.cmd('nnoremap <leader>d "_d')
+-- harpoon
+vim.cmd('nnoremap <C-a> :lua require("harpoon.mark").add_file()<CR>')
+vim.cmd('nnoremap <C-n> :lua require("harpoon.ui").toggle_quick_menu()<CR>')
+vim.cmd('nnoremap <A-1> :lua require("harpoon.ui").nav_file(1)<CR>')
+vim.cmd('nnoremap <A-2> :lua require("harpoon.ui").nav_file(2)<CR>')
+vim.cmd('nnoremap <A-3> :lua require("harpoon.ui").nav_file(3)<CR>')
+
+
+
+
+
 lvim.keys.normal_mode["<esc><esc>"] = "<cmd>nohlsearch<cr>"
 lvim.keys.normal_mode["Y"] = "y$"
 vim.cmd('vnoremap <leader>d "_d')
@@ -184,10 +193,10 @@ vim.opt.foldexpr = "nvim_treesitter#foldexpr()" -- set to "nvim_treesitter#folde
 vim.opt.foldlevelstart = 99
 vim.opt.foldnestmax = 10 -- deepest fold is 10 levels
 vim.opt.foldenable = false -- don't fold by default
-vim.opt.foldlevel = 1
--- to copy to clipboard
-vim.api.nvim_set_keymap("n", "y", '"+y', { noremap = true, silent = true })
+-- vim.opt.foldlevel = 1
+-- vim.api.nvim_set_keymap("n", "y", '"+y', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "Y", '"+yy', { noremap = true, silent = true }) vim.api.nvim_set_keymap("n", "p", '"+p', { noremap = true, silent = true }) vim.api.nvim_set_keymap("n", "P", '"+P', { noremap = true, silent = true }) -- unmap a default keymapping lvim.keys.normal_mode["<C-Up>"] = ""
+-- to copy to clipboard
 -- edit a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
@@ -220,6 +229,26 @@ vim.api.nvim_set_keymap("n", "Y", '"+yy', { noremap = true, silent = true }) vim
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.dashboard.active = true
+
+-- lvim.builtin.dashboard.custom_header = {
+--  " ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗",
+--  " ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║",
+--  " ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║",
+--  " ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
+--  " ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
+--  " ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
+-- }
+
+
+lvim.builtin.dashboard.custom_header = {
+"",
+"",
+" ██████╗ ███████╗██╗   ██╗███╗   ██╗███████╗██████╗     ██████╗ ███████╗██╗   ██╗ ",
+" ██╔══██╗██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝██╔══██╗    ██╔══██╗██╔════╝██║   ██║ ",
+" ██████╔╝█████╗   ╚████╔╝ ██╔██╗ ██║█████╗  ██████╔╝    ██║  ██║█████╗  ██║   ██║ ",
+" ██╔══██╗██╔══╝    ╚██╔╝  ██║╚██╗██║██╔══╝  ██╔══██╗    ██║  ██║██╔══╝  ╚██╗ ██╔╝ ",
+" ██║  ██║███████╗   ██║   ██║ ╚████║███████╗██║  ██║    ██████╔╝███████╗ ╚████╔╝ ",}
+
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.side = "left"
 lvim.builtin.nvimtree.show_icons.git = 0
@@ -278,6 +307,8 @@ lvim.builtin.treesitter.context_commentstring.enable = true
 -- lvim.autocommands.custom_groups = {
 --   { "BufWinEnter", "*.lua", "setlocal ts=8 sw=8" },
 -- }
+
+
 lvim.plugins = {
   {
   "lukas-reineke/indent-blankline.nvim",
@@ -333,6 +364,7 @@ lvim.plugins = {
     require('nvim-treesitter.configs').setup( {
       context_commentstring = {
         enable = true,
+        enable_autocmd = false,
         config = {
           javascriptreact = {
             __default = '// %s',
@@ -350,11 +382,15 @@ lvim.plugins = {
   "windwp/nvim-ts-autotag",
   event = "InsertEnter",
   config = function()
-    require("nvim-ts-autotag").setup()
+    require("nvim-ts-autotag").setup{
+      autotag = {
+        enable = true
+        }
+      }
   end,
 },
   {
-    'nvim-lua/plenary.nvim',
+    'ThePrimeagen/vim-be-good',
   },
   {
     'ThePrimeagen/harpoon',
@@ -364,9 +400,66 @@ lvim.plugins = {
     config = function()
       require("neoscroll").setup()
     end,
-  }
+  },{
+  "tpope/vim-surround"
+}
 }
 
-local ft = require('Comment.ft')
+--[[ require('Comment').setup {
+  pre_hook = function(ctx)
+    local U = require 'Comment.utils'
 
-ft.set('javascriptreact', {'{/* %s */}','{/* %s */}'})
+    local location = nil
+    if ctx.ctype == U.ctype.block then
+      location = require('ts_context_commentstring.utils').get_cursor_location()
+    elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+      location = require('ts_context_commentstring.utils').get_visual_start_location()
+    end
+
+    return require('ts_context_commentstring.internal').calculate_commentstring {
+      key = ctx.ctype == U.ctype.line and '__default' or '__multiline',
+      location = location,
+    }
+  end,
+} ]]
+-- local ft = require('Comment.ft')
+
+-- ft.set('javascriptreact', {'{/* %s */}','{/* %s */}'})
+-- ft.set('javascript', {'{/* %s */}','{/* %s */}'})
+
+
+
+-- local function goto_definition(split_cmd)
+--   local util = vim.lsp.util
+--   local log = require("vim.lsp.log")
+--   local api = vim.api
+
+--   local handler = function(_, method, result)
+--     -- stolen from $VIMRUNTIME/lua/vim/lsp/callbacks.lua
+
+--     if result == nil or vim.tbl_isempty(result) then
+--       local _ = log.info() and log.info(method, "No location found")
+--       return nil
+--     end
+
+--     if split_cmd then
+--       vim.cmd(split_cmd)
+--     end
+
+--     if vim.tbl_islist(result) then
+--       util.jump_to_location(result[1])
+
+--       if #result > 1 then
+--         util.set_qflist(util.locations_to_items(result))
+--         api.nvim_command("copen")
+--         api.nvim_command("wincmd p")
+--       end
+--     else
+--       util.jump_to_location(result)
+--     end
+--   end
+
+--   return handler
+-- end
+
+-- vim.lsp.handlers["textDocument/definition"] = goto_definition('split')
