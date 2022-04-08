@@ -41,6 +41,19 @@ vim.cmd('nnoremap <A-1> :lua require("harpoon.ui").nav_file(1)<CR>')
 vim.cmd('nnoremap <A-2> :lua require("harpoon.ui").nav_file(2)<CR>')
 vim.cmd('nnoremap <A-3> :lua require("harpoon.ui").nav_file(3)<CR>')
 
+-- keeping centered
+vim.cmd('nnoremap n nzzzv')
+vim.cmd('nnoremap N Nzzzv')
+vim.cmd('nnoremap J mzJ`z')
+
+
+-- undo breakponits
+
+vim.cmd('inoremap , ,<c-g>u')
+vim.cmd('inoremap . .<c-g>u')
+vim.cmd('inoremap ! !<c-g>u')
+vim.cmd('inoremap ? ?<c-g>u')
+
 lvim.keys.normal_mode["<esc><esc>"] = "<cmd>nohlsearch<cr>"
 lvim.keys.normal_mode["Y"] = "y$"
 vim.cmd('vnoremap <leader>d "_d')
@@ -244,7 +257,8 @@ lvim.plugins = {
       require("neoscroll").setup()
     end,
   },{
-  "tpope/vim-surround"
+  "tpope/vim-surround",
+  keys={"c","d","y"}
 }
 }
 
@@ -307,6 +321,19 @@ lvim.plugins = {
 
 -- vim.lsp.handlers["textDocument/definition"] = goto_definition('split')
 
-require'lspconfig'.tailwindcss.setup{}
+-- require'lspconfig'.tailwindcss.setup{}
 
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+
+local emmet_config = {
+  capabilities = capabilities,
+  filetypes = { 'html', 'css', 'scss', 'xml', 'pug', 'sass', 'svelte'};
+  root_dir = function(fname)
+      return vim.loop.cwd()
+    end,
+}
+
+require('lvim.lsp.manager').setup('emmet_ls', emmet_config)
